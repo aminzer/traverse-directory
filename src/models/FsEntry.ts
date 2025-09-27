@@ -16,11 +16,11 @@ class FsEntry {
     isFile = null,
     size = null,
   }: {
-    name?: string,
-    absolutePath?: string,
-    relativePath?: string,
-    isFile?: boolean,
-    size?: number,
+    name?: string;
+    absolutePath?: string;
+    relativePath?: string;
+    isFile?: boolean;
+    size?: number;
   } = {}) {
     this.name = name;
     this.absolutePath = absolutePath;

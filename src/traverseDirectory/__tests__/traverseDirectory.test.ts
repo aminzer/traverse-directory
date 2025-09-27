@@ -2,24 +2,31 @@ import { join } from 'node:path';
 import { FsEntry } from '../../models';
 import traverseDirectory from '../traverseDirectory';
 
-const prepareFsEntries = (entries: {
-  name: string;
-  relativePath: string;
-  isFile: boolean;
-  size: number;
-}[], basePath: string) => entries.map(options => new FsEntry({
-  ...options,
-  absolutePath: join(basePath, options.relativePath),
-}));
+const prepareFsEntries = (
+  entries: {
+    name: string;
+    relativePath: string;
+    isFile: boolean;
+    size: number;
+  }[],
+  basePath: string,
+) =>
+  entries.map(
+    (options) =>
+      new FsEntry({
+        ...options,
+        absolutePath: join(basePath, options.relativePath),
+      }),
+  );
 
 describe('traverseDirectory', () => {
   describe('when path does not exist', () => {
     const invalidDirPath = join(__dirname, 'invalid/path');
 
     it('is rejected with error', async () => {
-      await expect(traverseDirectory(invalidDirPath, () => { }))
-        .rejects
-        .toThrow(`Directory "${invalidDirPath}" does not exist`);
+      await expect(traverseDirectory(invalidDirPath, () => {})).rejects.toThrow(
+        `Directory "${invalidDirPath}" does not exist`,
+      );
     });
   });
 
@@ -27,9 +34,9 @@ describe('traverseDirectory', () => {
     const filePath = __filename;
 
     it('is rejected with error', async () => {
-      await expect(traverseDirectory(filePath, () => { }))
-        .rejects
-        .toThrow(`Directory "${filePath}" does not exist`);
+      await expect(traverseDirectory(filePath, () => {})).rejects.toThrow(
+        `Directory "${filePath}" does not exist`,
+      );
     });
   });
 
@@ -49,106 +56,107 @@ describe('traverseDirectory', () => {
       });
 
       it('is resolved to "undefined"', async () => {
-        await expect(returnValue)
-          .resolves
-          .toBe(undefined);
+        await expect(returnValue).resolves.toBe(undefined);
       });
 
       it('triggers callback for each file and directory in source directory tree', async () => {
         await returnValue;
 
-        const expectedFsEntries = prepareFsEntries([
-          {
-            name: '.dot_file',
-            relativePath: '.dot_file',
-            isFile: true,
-            size: 11,
-          },
-          {
-            name: 'dir_1',
-            relativePath: 'dir_1',
-            isFile: false,
-            size: 0,
-          },
-          {
-            name: 'file_1_1.txt',
-            relativePath: join('dir_1', 'file_1_1.txt'),
-            isFile: true,
-            size: 14,
-          },
-          {
-            name: 'file_1_2.txt',
-            relativePath: join('dir_1', 'file_1_2.txt'),
-            isFile: true,
-            size: 14,
-          },
-          {
-            name: 'dir_2',
-            relativePath: 'dir_2',
-            isFile: false,
-            size: 0,
-          },
-          {
-            name: 'dir_2_1',
-            relativePath: join('dir_2', 'dir_2_1'),
-            isFile: false,
-            size: 0,
-          },
-          {
-            name: 'file_2_1_1.txt',
-            relativePath: join('dir_2', 'dir_2_1', 'file_2_1_1.txt'),
-            isFile: true,
-            size: 16,
-          },
-          {
-            name: 'file_2_1_2.txt',
-            relativePath: join('dir_2', 'dir_2_1', 'file_2_1_2.txt'),
-            isFile: true,
-            size: 16,
-          },
-          {
-            name: 'dir_2_2',
-            relativePath: join('dir_2', 'dir_2_2'),
-            isFile: false,
-            size: 0,
-          },
-          {
-            name: 'file_2_2_1.txt',
-            relativePath: join('dir_2', 'dir_2_2', 'file_2_2_1.txt'),
-            isFile: true,
-            size: 16,
-          },
-          {
-            name: 'file_2_2_2.txt',
-            relativePath: join('dir_2', 'dir_2_2', 'file_2_2_2.txt'),
-            isFile: true,
-            size: 16,
-          },
-          {
-            name: 'file_2_1.txt',
-            relativePath: join('dir_2', 'file_2_1.txt'),
-            isFile: true,
-            size: 14,
-          },
-          {
-            name: 'file_2_2.txt',
-            relativePath: join('dir_2', 'file_2_2.txt'),
-            isFile: true,
-            size: 14,
-          },
-          {
-            name: 'file_1.txt',
-            relativePath: 'file_1.txt',
-            isFile: true,
-            size: 12,
-          },
-          {
-            name: 'file_2.txt',
-            relativePath: 'file_2.txt',
-            isFile: true,
-            size: 12,
-          },
-        ], dirPath);
+        const expectedFsEntries = prepareFsEntries(
+          [
+            {
+              name: '.dot_file',
+              relativePath: '.dot_file',
+              isFile: true,
+              size: 11,
+            },
+            {
+              name: 'dir_1',
+              relativePath: 'dir_1',
+              isFile: false,
+              size: 0,
+            },
+            {
+              name: 'file_1_1.txt',
+              relativePath: join('dir_1', 'file_1_1.txt'),
+              isFile: true,
+              size: 14,
+            },
+            {
+              name: 'file_1_2.txt',
+              relativePath: join('dir_1', 'file_1_2.txt'),
+              isFile: true,
+              size: 14,
+            },
+            {
+              name: 'dir_2',
+              relativePath: 'dir_2',
+              isFile: false,
+              size: 0,
+            },
+            {
+              name: 'dir_2_1',
+              relativePath: join('dir_2', 'dir_2_1'),
+              isFile: false,
+              size: 0,
+            },
+            {
+              name: 'file_2_1_1.txt',
+              relativePath: join('dir_2', 'dir_2_1', 'file_2_1_1.txt'),
+              isFile: true,
+              size: 16,
+            },
+            {
+              name: 'file_2_1_2.txt',
+              relativePath: join('dir_2', 'dir_2_1', 'file_2_1_2.txt'),
+              isFile: true,
+              size: 16,
+            },
+            {
+              name: 'dir_2_2',
+              relativePath: join('dir_2', 'dir_2_2'),
+              isFile: false,
+              size: 0,
+            },
+            {
+              name: 'file_2_2_1.txt',
+              relativePath: join('dir_2', 'dir_2_2', 'file_2_2_1.txt'),
+              isFile: true,
+              size: 16,
+            },
+            {
+              name: 'file_2_2_2.txt',
+              relativePath: join('dir_2', 'dir_2_2', 'file_2_2_2.txt'),
+              isFile: true,
+              size: 16,
+            },
+            {
+              name: 'file_2_1.txt',
+              relativePath: join('dir_2', 'file_2_1.txt'),
+              isFile: true,
+              size: 14,
+            },
+            {
+              name: 'file_2_2.txt',
+              relativePath: join('dir_2', 'file_2_2.txt'),
+              isFile: true,
+              size: 14,
+            },
+            {
+              name: 'file_1.txt',
+              relativePath: 'file_1.txt',
+              isFile: true,
+              size: 12,
+            },
+            {
+              name: 'file_2.txt',
+              relativePath: 'file_2.txt',
+              isFile: true,
+              size: 12,
+            },
+          ],
+          dirPath,
+        );
 
         expect(fsEntries.every((fsEntry) => fsEntry instanceof FsEntry)).toBe(true);
         expect(fsEntries).toEqual(expectedFsEntries);
@@ -224,45 +232,46 @@ describe('traverseDirectory', () => {
       });
 
       it('is rejected with corresponding error', async () => {
-        await expect(returnValue)
-          .rejects
-          .toThrow('Test error');
+        await expect(returnValue).rejects.toThrow('Test error');
       });
 
-      it('doesn\'t trigger callback after rejected file or directory', async () => {
+      it("doesn't trigger callback after rejected file or directory", async () => {
         try {
           await returnValue;
-        } catch (err) {
+        } catch {
           // ignored
         }
 
-        const expectedFsEntries = prepareFsEntries([
-          {
-            name: '.dot_file',
-            relativePath: '.dot_file',
-            isFile: true,
-            size: 11,
-          },
-          {
-            name: 'dir_1',
-            relativePath: 'dir_1',
-            isFile: false,
-            size: 0,
-          },
-          {
-            name: 'file_1_1.txt',
-            relativePath: join('dir_1', 'file_1_1.txt'),
-            isFile: true,
-            size: 14,
-          },
-        ], dirPath);
+        const expectedFsEntries = prepareFsEntries(
+          [
+            {
+              name: '.dot_file',
+              relativePath: '.dot_file',
+              isFile: true,
+              size: 11,
+            },
+            {
+              name: 'dir_1',
+              relativePath: 'dir_1',
+              isFile: false,
+              size: 0,
+            },
+            {
+              name: 'file_1_1.txt',
+              relativePath: join('dir_1', 'file_1_1.txt'),
+              isFile: true,
+              size: 14,
+            },
+          ],
+          dirPath,
+        );
 
         expect(fsEntries).toEqual(expectedFsEntries);
       });
     });
 
     describe('when "skipEntryChildrenIteration" is called for some directory', () => {
-      it('doesn\'t trigger callback for children of that directory', async () => {
+      it("doesn't trigger callback for children of that directory", async () => {
         const fsEntries = [];
 
         await traverseDirectory(dirPath, (fsEntry, { skipEntryChildrenIteration }) => {
@@ -273,50 +282,53 @@ describe('traverseDirectory', () => {
           }
         });
 
-        const expectedFsEntries = prepareFsEntries([
-          {
-            name: '.dot_file',
-            relativePath: '.dot_file',
-            isFile: true,
-            size: 11,
-          },
-          {
-            name: 'dir_1',
-            relativePath: 'dir_1',
-            isFile: false,
-            size: 0,
-          },
-          {
-            name: 'file_1_1.txt',
-            relativePath: join('dir_1', 'file_1_1.txt'),
-            isFile: true,
-            size: 14,
-          },
-          {
-            name: 'file_1_2.txt',
-            relativePath: join('dir_1', 'file_1_2.txt'),
-            isFile: true,
-            size: 14,
-          },
-          {
-            name: 'dir_2',
-            relativePath: 'dir_2',
-            isFile: false,
-            size: 0,
-          },
-          {
-            name: 'file_1.txt',
-            relativePath: 'file_1.txt',
-            isFile: true,
-            size: 12,
-          },
-          {
-            name: 'file_2.txt',
-            relativePath: 'file_2.txt',
-            isFile: true,
-            size: 12,
-          },
-        ], dirPath);
+        const expectedFsEntries = prepareFsEntries(
+          [
+            {
+              name: '.dot_file',
+              relativePath: '.dot_file',
+              isFile: true,
+              size: 11,
+            },
+            {
+              name: 'dir_1',
+              relativePath: 'dir_1',
+              isFile: false,
+              size: 0,
+            },
+            {
+              name: 'file_1_1.txt',
+              relativePath: join('dir_1', 'file_1_1.txt'),
+              isFile: true,
+              size: 14,
+            },
+            {
+              name: 'file_1_2.txt',
+              relativePath: join('dir_1', 'file_1_2.txt'),
+              isFile: true,
+              size: 14,
+            },
+            {
+              name: 'dir_2',
+              relativePath: 'dir_2',
+              isFile: false,
+              size: 0,
+            },
+            {
+              name: 'file_1.txt',
+              relativePath: 'file_1.txt',
+              isFile: true,
+              size: 12,
+            },
+            {
+              name: 'file_2.txt',
+              relativePath: 'file_2.txt',
+              isFile: true,
+              size: 12,
+            },
+          ],
+          dirPath,
+        );
 
         expect(fsEntries).toEqual(expectedFsEntries);
       });

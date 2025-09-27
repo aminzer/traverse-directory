@@ -32,9 +32,8 @@ jobs:
       - name: Build code
         run: npm run build
 
-      # TODO: enable code style check
-      # - name: Check code style
-      #   run: npm run codestyle
+      - name: Check code style
+        run: npm run codestyle
 
       - name: Run tests
         run: npm run test

@@ -17,11 +17,7 @@ describe('utils > iteration > iterateInSeries', () => {
     });
 
     it('calls callback function for each array element in series', async () => {
-      expect(logs).toEqual([
-        'processed a:0',
-        'processed b:1',
-        'processed c:2',
-      ]);
+      expect(logs).toEqual(['processed a:0', 'processed b:1', 'processed c:2']);
     });
   });
 
@@ -64,23 +60,17 @@ describe('utils > iteration > iterateInSeries', () => {
     });
 
     it('is rejected with corresponding error', async () => {
-      await expect(returnValue)
-        .rejects
-        .toThrow('Test error on element b');
+      await expect(returnValue).rejects.toThrow('Test error on element b');
     });
 
     it("doesn't trigger callback after rejected element", async () => {
       try {
         await returnValue;
-      } catch (err) {
+      } catch {
         // ignored
       }
 
-      expect(logs).toEqual([
-        'processing a',
-        'processed a',
-        'processing b',
-      ]);
+      expect(logs).toEqual(['processing a', 'processed a', 'processing b']);
     });
   });
 });
