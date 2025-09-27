@@ -168,12 +168,12 @@ describe('traverseDirectory', () => {
       const logs: string[] = [];
 
       beforeEach(async () => {
-        returnValue = traverseDirectory(dirPath, async (fsEntry) => {
-          logs.push(`Processing ${fsEntry.name}`);
+        returnValue = traverseDirectory(dirPath, async ({ name }) => {
+          logs.push(`Processing ${name}`);
 
           await new Promise((resolve) => setTimeout(resolve, 1));
 
-          logs.push(`Processed ${fsEntry.name}`);
+          logs.push(`Processed ${name}`);
         });
       });
 

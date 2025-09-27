@@ -1,44 +1,41 @@
-import { join, resolve } from 'node:path';
 import FsEntry from '../FsEntry';
 
 describe('models > FsEntry', () => {
-  describe('constructor', () => {
-    it('initializes instance with correct params', () => {
-      const opts = {
-        name: 'name',
-        absolutePath: resolve('root', 'some', 'path'),
-        relativePath: join('some', 'path'),
+  describe('when entry is file', () => {
+    it('initializes instance with correct fields', () => {
+      const fsEntry = new FsEntry({
+        name: 'the_file.txt',
+        absolutePath: '/absolute/path/to/the_file.txt',
+        relativePath: '/path/to/the_file.txt',
         isFile: true,
         size: 32,
-      };
+      });
 
-      const fsEntry = new FsEntry(opts);
-
-      expect(fsEntry).toEqual(opts);
-    });
-  });
-
-  describe('get isDirectory', () => {
-    const fsEntry = new FsEntry();
-
-    it('returns boolean opposite to "isFile"', () => {
-      fsEntry.isFile = true;
-      expect(fsEntry.isDirectory).toBe(false);
-
-      fsEntry.isFile = false;
-      expect(fsEntry.isDirectory).toBe(true);
-    });
-  });
-
-  describe('set isDirectory', () => {
-    const fsEntry = new FsEntry();
-
-    it('sets "isFile" to opposite boolean to the passed value', () => {
-      fsEntry.isDirectory = true;
-      expect(fsEntry.isFile).toBe(false);
-
-      fsEntry.isDirectory = false;
+      expect(fsEntry.name).toBe('the_file.txt');
+      expect(fsEntry.absolutePath).toBe('/absolute/path/to/the_file.txt');
+      expect(fsEntry.relativePath).toBe('/path/to/the_file.txt');
       expect(fsEntry.isFile).toBe(true);
+      expect(fsEntry.isDirectory).toBe(false);
+      expect(fsEntry.size).toBe(32);
+    });
+  });
+
+  describe('when entry is directory', () => {
+    it('initializes instance with correct fields', () => {
+      const fsEntry = new FsEntry({
+        name: 'the_directory',
+        absolutePath: '/absolute/path/to/the_directory',
+        relativePath: '/path/to/the_directory',
+        isFile: false,
+        size: 0,
+      });
+
+      expect(fsEntry.name).toBe('the_directory');
+      expect(fsEntry.absolutePath).toBe('/absolute/path/to/the_directory');
+      expect(fsEntry.relativePath).toBe('/path/to/the_directory');
+      expect(fsEntry.isFile).toBe(false);
+      expect(fsEntry.isDirectory).toBe(true);
+      expect(fsEntry.size).toBe(0);
     });
   });
 });

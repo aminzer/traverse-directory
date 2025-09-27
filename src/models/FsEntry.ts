@@ -1,40 +1,56 @@
 class FsEntry {
-  name: string;
+  _name: string;
 
-  absolutePath: string;
+  _absolutePath: string;
 
-  relativePath: string;
+  _relativePath: string;
 
-  isFile: boolean;
+  _isFile: boolean;
 
-  size: number;
+  _size: number;
 
   constructor({
-    name = null,
-    absolutePath = null,
-    relativePath = null,
-    isFile = null,
-    size = null,
+    name,
+    absolutePath,
+    relativePath,
+    isFile,
+    size,
   }: {
-    name?: string;
-    absolutePath?: string;
-    relativePath?: string;
-    isFile?: boolean;
-    size?: number;
-  } = {}) {
-    this.name = name;
-    this.absolutePath = absolutePath;
-    this.relativePath = relativePath;
-    this.isFile = isFile;
-    this.size = size;
+    name: string;
+    absolutePath: string;
+    relativePath: string;
+    isFile: boolean;
+    size: number;
+  }) {
+    this._name = name;
+    this._absolutePath = absolutePath;
+    this._relativePath = relativePath;
+    this._isFile = isFile;
+    this._size = size;
+  }
+
+  get name(): string {
+    return this._name;
+  }
+
+  get absolutePath(): string {
+    return this._absolutePath;
+  }
+
+  get relativePath(): string {
+    return this._relativePath;
+  }
+
+  get isFile(): boolean {
+    return this._isFile;
   }
 
   get isDirectory(): boolean {
     return !this.isFile;
   }
 
-  set isDirectory(isDirectory: boolean) {
-    this.isFile = !isDirectory;
+  get size(): number {
+    return this._size;
   }
 }
 
