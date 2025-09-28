@@ -29,7 +29,9 @@ await traverseDirectory('/path/to/directory', ({ isFile, relativePath }) => {
 `traverseDirectory` recursively iterates over the contents of a directory.
 
 ```typescript
-traverseDirectory(dirPath, onEachChild);
+import { directoryExists } from '@aminzer/traverse-directory';
+
+await traverseDirectory(dirPath, onEachChild);
 ```
 
 ##### Parameters
@@ -63,3 +65,24 @@ Instance properties:
 * `size` (`number`) - size of file in bytes, `0` for directories.
 * `isFile` (`boolean`) - `true` if entry is file.
 * `isDirectory` (`boolean`) - `true` if entry is directory.
+
+
+**directoryExists**
+
+##### Overview
+
+`directoryExists` is an async function that checks if a given path exists and corresponds to a directory.
+
+```typescript
+import { directoryExists } from '@aminzer/traverse-directory';
+
+const exists = await directoryExists('/path/to/directory');
+```
+
+##### Parameters
+
+* `dirPath` (`string`, required) - path to the directory to check.
+
+##### Return value
+
+`Promise<boolean>` that resolves to `true` if the directory exists, or `false` otherwise.

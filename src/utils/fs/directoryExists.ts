@@ -1,6 +1,6 @@
 import { stat } from 'node:fs/promises';
 
-const directoryExist = async (path: string): Promise<boolean> => {
+const directoryExists = async (path: string): Promise<boolean> => {
   try {
     const stats = await stat(path);
     return stats.isDirectory();
@@ -9,4 +9,4 @@ const directoryExist = async (path: string): Promise<boolean> => {
   }
 };
 
-export default directoryExist;
+export default directoryExists;

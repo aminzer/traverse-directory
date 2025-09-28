@@ -1,14 +1,14 @@
 import assert from 'node:assert';
 import { join } from 'node:path';
 import { describe, it } from 'node:test';
-import directoryExist from '../directoryExist';
+import directoryExists from '../directoryExists';
 
-describe('utils > fs > directoryExist', () => {
+describe('utils > fs > directoryExists', () => {
   describe('when path does not exist', () => {
     const invalidPath = join(import.meta.dirname, 'invalid/path');
 
     it('returns false', async () => {
-      assert.strictEqual(await directoryExist(invalidPath), false);
+      assert.strictEqual(await directoryExists(invalidPath), false);
     });
   });
 
@@ -16,7 +16,7 @@ describe('utils > fs > directoryExist', () => {
     const filePath = import.meta.filename;
 
     it('returns false', async () => {
-      assert.strictEqual(await directoryExist(filePath), false);
+      assert.strictEqual(await directoryExists(filePath), false);
     });
   });
 
@@ -24,7 +24,7 @@ describe('utils > fs > directoryExist', () => {
     const dirPath = import.meta.dirname;
 
     it('returns true', async () => {
-      assert.strictEqual(await directoryExist(dirPath), true);
+      assert.strictEqual(await directoryExists(dirPath), true);
     });
   });
 });
