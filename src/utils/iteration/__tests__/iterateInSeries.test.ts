@@ -42,7 +42,6 @@ describe('utils > iteration > iterateInSeries', () => {
         'processed b',
         'processing c',
         'processed c',
-        'TEMP CHANGE TO TEST PIPELINE',
       ]);
     });
   });
