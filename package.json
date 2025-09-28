@@ -2,6 +2,9 @@
   "name": "@aminzer/traverse-directory",
   "version": "1.0.0",
   "description": "Utility for directory child entries recursive iteration",
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "keywords": [
     "traverse",
