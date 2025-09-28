@@ -6,7 +6,7 @@ import { OnEachChild } from './types';
 
 const traverseDirectoryRecursive = async (
   absoluteDirPath: string,
-  relativeDirPath: string,
+  relativeDirPath: string | null,
   onEachChild: OnEachChild,
 ): Promise<void> => {
   const entries = await readdir(absoluteDirPath);

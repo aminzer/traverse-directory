@@ -1,3 +1,5 @@
+import assert from 'node:assert';
+import { describe, it } from 'node:test';
 import FsEntry from '../FsEntry';
 
 describe('models > FsEntry', () => {
@@ -11,12 +13,12 @@ describe('models > FsEntry', () => {
         size: 32,
       });
 
-      expect(fsEntry.name).toBe('the_file.txt');
-      expect(fsEntry.absolutePath).toBe('/absolute/path/to/the_file.txt');
-      expect(fsEntry.relativePath).toBe('/path/to/the_file.txt');
-      expect(fsEntry.isFile).toBe(true);
-      expect(fsEntry.isDirectory).toBe(false);
-      expect(fsEntry.size).toBe(32);
+      assert.strictEqual(fsEntry.name, 'the_file.txt');
+      assert.strictEqual(fsEntry.absolutePath, '/absolute/path/to/the_file.txt');
+      assert.strictEqual(fsEntry.relativePath, '/path/to/the_file.txt');
+      assert.strictEqual(fsEntry.isFile, true);
+      assert.strictEqual(fsEntry.isDirectory, false);
+      assert.strictEqual(fsEntry.size, 32);
     });
   });
 
@@ -30,12 +32,12 @@ describe('models > FsEntry', () => {
         size: 0,
       });
 
-      expect(fsEntry.name).toBe('the_directory');
-      expect(fsEntry.absolutePath).toBe('/absolute/path/to/the_directory');
-      expect(fsEntry.relativePath).toBe('/path/to/the_directory');
-      expect(fsEntry.isFile).toBe(false);
-      expect(fsEntry.isDirectory).toBe(true);
-      expect(fsEntry.size).toBe(0);
+      assert.strictEqual(fsEntry.name, 'the_directory');
+      assert.strictEqual(fsEntry.absolutePath, '/absolute/path/to/the_directory');
+      assert.strictEqual(fsEntry.relativePath, '/path/to/the_directory');
+      assert.strictEqual(fsEntry.isFile, false);
+      assert.strictEqual(fsEntry.isDirectory, true);
+      assert.strictEqual(fsEntry.size, 0);
     });
   });
 });

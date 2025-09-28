@@ -1,4 +1,6 @@
+import assert from 'node:assert';
 import { join } from 'node:path';
+import { beforeEach, describe, it } from 'node:test';
 import { FsEntry } from '../../models';
 import traverseDirectory from '../traverseDirectory';
 
@@ -21,31 +23,31 @@ const prepareFsEntries = (
 
 describe('traverseDirectory', () => {
   describe('when path does not exist', () => {
-    const invalidDirPath = join(__dirname, 'invalid/path');
+    const invalidDirPath = join(import.meta.dirname, 'invalid/path');
 
     it('is rejected with error', async () => {
-      await expect(traverseDirectory(invalidDirPath, () => {})).rejects.toThrow(
-        `Directory "${invalidDirPath}" does not exist`,
-      );
+      await assert.rejects(() => traverseDirectory(invalidDirPath, () => {}), {
+        message: `Directory "${invalidDirPath}" does not exist`,
+      });
     });
   });
 
   describe('when path corresponds to file', () => {
-    const filePath = __filename;
+    const filePath = import.meta.filename;
 
     it('is rejected with error', async () => {
-      await expect(traverseDirectory(filePath, () => {})).rejects.toThrow(
-        `Directory "${filePath}" does not exist`,
-      );
+      await assert.rejects(() => traverseDirectory(filePath, () => {}), {
+        message: `Directory "${filePath}" does not exist`,
+      });
     });
   });
 
   describe('when path corresponds to directory', () => {
-    const dirPath = join(__dirname, '../../../test/resources/test_directory');
+    const dirPath = join(import.meta.dirname, '../../../test/resources/test_directory');
 
     describe('when callback is executed without rejections for each element', () => {
-      let fsEntries;
-      let returnValue;
+      let fsEntries: FsEntry[] = [];
+      let returnValue: Promise<void>;
 
       beforeEach(async () => {
         fsEntries = [];
@@ -56,7 +58,7 @@ describe('traverseDirectory', () => {
       });
 
       it('is resolved to "undefined"', async () => {
-        await expect(returnValue).resolves.toBe(undefined);
+        await assert.strictEqual(await returnValue, undefined);
       });
 
       it('triggers callback for each file and directory in source directory tree', async () => {
@@ -158,13 +160,13 @@ describe('traverseDirectory', () => {
           dirPath,
         );
 
-        expect(fsEntries.every((fsEntry) => fsEntry instanceof FsEntry)).toBe(true);
-        expect(fsEntries).toEqual(expectedFsEntries);
+        assert.ok(fsEntries.every((fsEntry) => fsEntry instanceof FsEntry));
+        assert.deepStrictEqual(fsEntries, expectedFsEntries);
       });
     });
 
     describe('when async callback is passed', () => {
-      let returnValue;
+      let returnValue: Promise<void>;
       const logs: string[] = [];
 
       beforeEach(async () => {
@@ -180,7 +182,7 @@ describe('traverseDirectory', () => {
       it('waits current entry Promise resolving before calling callback on next entry', async () => {
         await returnValue;
 
-        expect(logs).toEqual([
+        const expectedLogs = [
           'Processing .dot_file',
           'Processed .dot_file',
           'Processing dir_1',
@@ -211,13 +213,15 @@ describe('traverseDirectory', () => {
           'Processed file_1.txt',
           'Processing file_2.txt',
           'Processed file_2.txt',
-        ]);
+        ];
+
+        assert.deepStrictEqual(logs, expectedLogs);
       });
     });
 
     describe('when callback is rejected for some file or directory in source directory tree', () => {
-      let fsEntries;
-      let returnValue;
+      let fsEntries: FsEntry[] = [];
+      let returnValue: Promise<void>;
 
       beforeEach(async () => {
         fsEntries = [];
@@ -232,7 +236,7 @@ describe('traverseDirectory', () => {
       });
 
       it('is rejected with corresponding error', async () => {
-        await expect(returnValue).rejects.toThrow('Test error');
+        await assert.rejects(() => returnValue, { message: 'Test error' });
       });
 
       it("doesn't trigger callback after rejected file or directory", async () => {
@@ -266,13 +270,13 @@ describe('traverseDirectory', () => {
           dirPath,
         );
 
-        expect(fsEntries).toEqual(expectedFsEntries);
+        assert.deepStrictEqual(fsEntries, expectedFsEntries);
       });
     });
 
     describe('when "skipEntryChildrenIteration" is called for some directory', () => {
       it("doesn't trigger callback for children of that directory", async () => {
-        const fsEntries = [];
+        const fsEntries: FsEntry[] = [];
 
         await traverseDirectory(dirPath, (fsEntry, { skipEntryChildrenIteration }) => {
           fsEntries.push(fsEntry);
@@ -330,7 +334,7 @@ describe('traverseDirectory', () => {
           dirPath,
         );
 
-        expect(fsEntries).toEqual(expectedFsEntries);
+        assert.deepStrictEqual(fsEntries, expectedFsEntries);
       });
     });
   });

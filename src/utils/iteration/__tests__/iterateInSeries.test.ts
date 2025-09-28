@@ -1,3 +1,5 @@
+import assert from 'node:assert';
+import { beforeEach, describe, it } from 'node:test';
 import iterateInSeries from '../iterateInSeries';
 
 describe('utils > iteration > iterateInSeries', () => {
@@ -16,8 +18,8 @@ describe('utils > iteration > iterateInSeries', () => {
       });
     });
 
-    it('calls callback function for each array element in series', async () => {
-      expect(logs).toEqual(['processed a:0', 'processed b:1', 'processed c:2']);
+    it('calls callback function for each array element in series', () => {
+      assert.deepStrictEqual(logs, ['processed a:0', 'processed b:1', 'processed c:2']);
     });
   });
 
@@ -32,8 +34,8 @@ describe('utils > iteration > iterateInSeries', () => {
       });
     });
 
-    it('waits current element Promise resolving before calling callback on next element', async () => {
-      expect(logs).toEqual([
+    it('waits current element Promise resolving before calling callback on next element', () => {
+      assert.deepStrictEqual(logs, [
         'processing a',
         'processed a',
         'processing b',
@@ -45,7 +47,7 @@ describe('utils > iteration > iterateInSeries', () => {
   });
 
   describe('when callback rejects with error for some element', () => {
-    let returnValue;
+    let returnValue: Promise<void>;
 
     beforeEach(async () => {
       returnValue = iterateInSeries(['a', 'b', 'c'], async (element) => {
@@ -60,7 +62,7 @@ describe('utils > iteration > iterateInSeries', () => {
     });
 
     it('is rejected with corresponding error', async () => {
-      await expect(returnValue).rejects.toThrow('Test error on element b');
+      await assert.rejects(() => returnValue, { message: 'Test error on element b' });
     });
 
     it("doesn't trigger callback after rejected element", async () => {
@@ -70,7 +72,7 @@ describe('utils > iteration > iterateInSeries', () => {
         // ignored
       }
 
-      expect(logs).toEqual(['processing a', 'processed a', 'processing b']);
+      assert.deepStrictEqual(logs, ['processing a', 'processed a', 'processing b']);
     });
   });
 });
