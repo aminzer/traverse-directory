@@ -1,6 +1,6 @@
 import assert from 'node:assert';
 import { beforeEach, describe, it } from 'node:test';
-import iterateInSeries from '../iterateInSeries';
+import iterateInSeries from '../iterateInSeries.js';
 
 describe('utils > iteration > iterateInSeries', () => {
   let sourceArray: string[] = [];

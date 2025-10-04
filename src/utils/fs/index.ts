@@ -1,1 +1,1 @@
-export { default as directoryExists } from './directoryExists';
+export { default as directoryExists } from './directoryExists.js';

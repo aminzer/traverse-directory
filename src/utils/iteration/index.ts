@@ -1,1 +1,1 @@
-export { default as iterateInSeries } from './iterateInSeries';
+export { default as iterateInSeries } from './iterateInSeries.js';

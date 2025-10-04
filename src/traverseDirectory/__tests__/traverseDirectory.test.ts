@@ -1,8 +1,8 @@
 import assert from 'node:assert';
 import { join } from 'node:path';
 import { beforeEach, describe, it } from 'node:test';
-import { FsEntry } from '../../models';
-import traverseDirectory from '../traverseDirectory';
+import { FsEntry } from '../../models/index.js';
+import traverseDirectory from '../traverseDirectory.js';
 
 const prepareFsEntries = (
   entries: {

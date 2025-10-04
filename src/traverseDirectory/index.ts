@@ -1,1 +1,1 @@
-export { default } from './traverseDirectory';
+export { default } from './traverseDirectory.js';

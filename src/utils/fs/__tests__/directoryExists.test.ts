@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 import { join } from 'node:path';
 import { describe, it } from 'node:test';
-import directoryExists from '../directoryExists';
+import directoryExists from '../directoryExists.js';
 
 describe('utils > fs > directoryExists', () => {
   describe('when path does not exist', () => {

@@ -1,8 +1,8 @@
 import { join } from 'node:path';
 import { stat, readdir } from 'node:fs/promises';
-import { FsEntry } from '../models';
-import { iterateInSeries } from '../utils/iteration';
-import { OnEachChild } from './types';
+import { FsEntry } from '../models/index.js';
+import { iterateInSeries } from '../utils/iteration/index.js';
+import { OnEachChild } from './types.js';
 
 const traverseDirectoryRecursive = async (
   absoluteDirPath: string,

@@ -1,4 +1,4 @@
-import { FsEntry } from '../models';
+import { FsEntry } from '../models/index.js';
 
 type OnEachChildOptions = {
   skipEntryChildrenIteration: () => void;

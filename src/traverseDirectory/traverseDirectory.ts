@@ -1,6 +1,6 @@
-import { directoryExists } from '../utils/fs';
-import traverseDirectoryRecursive from './traverseDirectoryRecursive';
-import { OnEachChild } from './types';
+import { directoryExists } from '../utils/fs/index.js';
+import traverseDirectoryRecursive from './traverseDirectoryRecursive.js';
+import { OnEachChild } from './types.js';
 
 const traverseDirectory = async (dirPath: string, onEachChild: OnEachChild): Promise<void> => {
   if (!(await directoryExists(dirPath))) {

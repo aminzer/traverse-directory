@@ -1,6 +1,6 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
-import FsEntry from '../FsEntry';
+import FsEntry from '../FsEntry.js';
 
 describe('models > FsEntry', () => {
   describe('when entry is file', () => {

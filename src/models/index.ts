@@ -1,1 +1,1 @@
-export { default as FsEntry } from './FsEntry';
+export { default as FsEntry } from './FsEntry.js';
