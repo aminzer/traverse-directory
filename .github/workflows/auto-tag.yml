@@ -1,0 +1,30 @@
+name: Auto Tag
+
+on:
+  workflow_run:
+    workflows: [Verify]
+    types: [completed]
+    branches: [main]
+
+jobs:
+  tag:
+    name: Create Git tag from package.json version
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Create Git tag if version changed
+        run: |
+          VERSION="v$(node -p "require('./package.json').version")"
+          if ! git rev-parse "$VERSION" >/dev/null 2>&1; then
+            git tag "$VERSION"
+            git push origin "$VERSION"
+            echo "Created tag $VERSION"
+          else
+            echo "Tag $VERSION already exists, skipping"
+          fi
