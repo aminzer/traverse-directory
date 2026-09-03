@@ -1,0 +1,93 @@
+name: Stage Release
+
+on:
+  workflow_run:
+    workflows: [Auto Tag]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  # Pinned: `npm stage` requires >= 11.15.0. Bump deliberately, not automatically -
+  # this job holds a credential that can queue a release.
+  NPM_VERSION: 11.19.1
+
+jobs:
+  stage:
+    name: Stage package release on npm
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.ref }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24.x
+          registry-url: https://registry.npmjs.org
+
+      - name: Setup npm
+        run: |
+          npm install -g "npm@$NPM_VERSION"
+          npm --version
+
+      - name: Check if version is already published
+        id: check
+        run: |
+          NAME="$(node -p "require('./package.json').name")"
+          VERSION="$(node -p "require('./package.json').version")"
+          echo "name=$NAME" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          if npm view "$NAME@$VERSION" version >/dev/null 2>&1; then
+            echo "published=true" >> "$GITHUB_OUTPUT"
+            echo "$NAME@$VERSION is already published, nothing to stage"
+          else
+            echo "published=false" >> "$GITHUB_OUTPUT"
+            echo "$NAME@$VERSION is not published yet"
+          fi
+
+      - name: Install dependencies
+        if: steps.check.outputs.published == 'false'
+        run: npm ci
+
+      - name: Build code
+        if: steps.check.outputs.published == 'false'
+        run: npm run build
+
+      - name: Stage release
+        if: steps.check.outputs.published == 'false'
+        run: npm stage publish
+
+      - name: Report staged release
+        if: steps.check.outputs.published == 'false'
+        run: |
+          NAME="${{ steps.check.outputs.name }}"
+          VERSION="${{ steps.check.outputs.version }}"
+          {
+            echo "### Staged \`$NAME@$VERSION\`"
+            echo
+            echo "Awaiting approval - nothing is live on npm yet."
+            echo
+            echo '```'
+            npm stage list "$NAME" 2>&1 || echo "npm stage list failed; check npmjs.com"
+            echo '```'
+            echo
+            echo "Approve with \`npm stage approve <stage-id>\` (prompts for 2FA),"
+            echo "inspect first with \`npm stage view <stage-id>\` or \`npm stage download <stage-id>\`,"
+            echo "or discard with \`npm stage reject <stage-id>\`."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Report skip
+        if: steps.check.outputs.published == 'true'
+        run: |
+          echo "### Nothing to stage" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "\`${{ steps.check.outputs.name }}@${{ steps.check.outputs.version }}\` is already published." >> "$GITHUB_STEP_SUMMARY"
